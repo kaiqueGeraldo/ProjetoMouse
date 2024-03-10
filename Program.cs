@@ -3,12 +3,13 @@
 int idMouse;
 string defeito;
 
-Dictionary<string, int> situacoes = new Dictionary<string, int>()
+Dictionary<string, List<int>> situacoes = new Dictionary<string, List<int>>()
 {
-    { "Necessita da esfera", 0 },
-    { "Necessita de limpeza", 0 },
-    { "Necessita troca cabo/conector", 0 },
-    { "Quebrado ou inutilizado", 0 }
+    { "Sem defeitos", new List<int>() },
+    { "Necessita da esfera", new List<int>() },
+    { "Necessita de limpeza", new List<int>() },
+    { "Necessita troca cabo/conector", new List<int>() },
+    { "Quebrado ou inutilizado", new List<int>() }
 };
 
 do
@@ -20,32 +21,34 @@ do
         break;
 
     Console.WriteLine("\nDigite o tipo de defeito do mouse:");
-    Console.WriteLine("1.Necessita da esfera.");
-    Console.WriteLine("2.Necessita de limpeza.");
-    Console.WriteLine("3.Necessita troca cabo/conector.");
-    Console.WriteLine("4.Quebrado ou inutilizado.\n");
+    Console.WriteLine("1.Sem defeitos.");
+    Console.WriteLine("2.Necessita da esfera.");
+    Console.WriteLine("3.Necessita de limpeza.");
+    Console.WriteLine("4.Necessita troca cabo/conector.");
+    Console.WriteLine("5.Quebrado ou inutilizado.\n");
     int opcao = int.Parse(Console.ReadLine());
 
     switch (opcao)
     {
         case 1:
-            defeito = "Necessita da esfera";
+            situacoes["Sem defeitos"].Add(idMouse);
             break;
         case 2:
-            defeito = "Necessita de limpeza";
+            situacoes["Necessita da esfera"].Add(idMouse);
             break;
         case 3:
-            defeito = "Necessita troca cabo/conector";
+            situacoes["Necessita de limpeza"].Add(idMouse);
             break;
         case 4:
-            defeito = "Quebrado ou inutilizado";
+            situacoes["Necessita troca cabo/conector"].Add(idMouse);
+            break;
+        case 5:
+            situacoes["Quebrado ou inutilizado"].Add(idMouse);
             break;
         default:
             Console.WriteLine("Opção inválida. Tente novamente.");
             continue;
     }
-
-    situacoes[defeito]++;
 
     Console.WriteLine("\nDeseja cadastrar outro mouse? (S/N): ");
     string resposta = Console.ReadLine();
@@ -57,11 +60,18 @@ do
     }
 } while (true);
 
-Console.WriteLine($"\nQuantidade de mouses: {situacoes.Values.Sum()}");
-Console.WriteLine("\nSituação:\t\t\tQuantidade:\t\tPercentual:");
-
 foreach (var situacao in situacoes)
 {
-    double percentual = (double)situacao.Value / situacoes.Values.Sum() * 100;
-    Console.WriteLine($"{situacao.Key}\t\t\t{situacao.Value}\t\t{percentual:0.##}%");
+    Console.WriteLine($"\n---- Identificação dos mouses {situacao.Key.ToLower()} ----");
+    if (situacao.Value.Count != 0)
+    {
+        Console.WriteLine(string.Join(", ", situacao.Value));
+
+    }
+    else
+    {
+        Console.WriteLine("Nenhum");
+    }
+    Console.WriteLine($"Total: {situacao.Value.Count} mouse(s)");
+    Console.WriteLine();
 }
